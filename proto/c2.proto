@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package c2;
+
+option go_package = "portal/proto";
+
+service C2Service {
+  // Command stream from server to client
+  rpc SendCommands(stream Command) returns (stream CommandResponse);
+
+  // Client registration
+  rpc RegisterAgent(AgentInfo) returns (RegistrationResponse);
+
+  // Client heartbeat
+  rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+}
+
+message Command {
+  string id = 1;
+  string command_type = 2;
+  bytes payload = 3;
+  int64 timestamp = 4;
+}
+
+message CommandResponse {
+  string command_id = 1;
+  bool success = 2;
+  bytes result = 3;
+  string error_message = 4;
+  int64 timestamp = 5;
+}
+
+message AgentInfo {
+  string agent_id = 1;
+  string hostname = 2;
+  string os = 3;
+  string architecture = 4;
+  string ip_address = 5;
+  string username = 6;
+  int64 registration_time = 7;
+}
+
+message RegistrationResponse {
+  bool success = 1;
+  string agent_id = 2;
+  string server_public_key = 3;
+  string error_message = 4;
+}
+
+message HeartbeatRequest {
+  string agent_id = 1;
+  int64 timestamp = 2;
+  SystemStats stats = 3;
+}
+
+message HeartbeatResponse {
+  bool success = 1;
+  int64 server_time = 2;
+}
+
+message SystemStats {
+  double cpu_usage = 1;
+  double memory_usage = 2;
+  int64 uptime = 3;
+}

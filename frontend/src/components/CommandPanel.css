@@ -1,0 +1,140 @@
+.command-panel {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  background: #1e2233;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.command-panel-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.command-panel-header h2 {
+  margin: 0;
+  color: #ffffff;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.back-button {
+  background: #4b5563;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.back-button:hover {
+  background: #374151;
+}
+
+.agent-details {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #111827;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.agent-details div {
+  color: #d1d5db;
+}
+
+.agent-details strong {
+  color: #ffffff;
+}
+
+.command-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.form-group select,
+.form-group textarea {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 4px;
+  padding: 10px 12px;
+  color: #ffffff;
+  font-family: inherit;
+}
+
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.error-message {
+  color: #ef4444;
+  margin-bottom: 16px;
+  padding: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 4px;
+}
+
+.send-button {
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+  margin-top: 8px;
+}
+
+.send-button:hover {
+  background: #059669;
+}
+
+.send-button:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+}
+
+.command-result {
+  background: #111827;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.command-result h3 {
+  color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.command-result pre {
+  background: #0f172a;
+  border-radius: 4px;
+  padding: 12px;
+  color: #a5b4fc;
+  overflow-x: auto;
+  margin: 0;
+  font-family: "Menlo", "Monaco", "Courier New", monospace;
+}
