@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import InteractiveShell from './InteractiveShell';
+import FileExplorer from './FileExplorer';
 import './AgentCommander.css';
 
 const API_URL = 'http://localhost:8080';
@@ -13,6 +14,7 @@ const AgentCommander = ({ agent: initialAgent }) => {
   const [history, setHistory] = useState([]);
   const [isExecuting, setIsExecuting] = useState(false);
   const [showShellModal, setShowShellModal] = useState(false);
+  const [showFileExplorer, setShowFileExplorer] = useState(false);
   const [error, setError] = useState(null);
   const commandEndRef = useRef(null);
 
@@ -163,6 +165,16 @@ const AgentCommander = ({ agent: initialAgent }) => {
     setShowShellModal(false);
   };
 
+  // File explorer handling
+  const openFileExplorer = () => {
+    if (!agent) return;
+    setShowFileExplorer(true);
+  };
+  
+  const closeFileExplorer = () => {
+    setShowFileExplorer(false);
+  };
+
   // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -228,6 +240,12 @@ const AgentCommander = ({ agent: initialAgent }) => {
             onClick={openInteractiveShell}
           >
             Interactive Shell
+          </button>
+          <button
+            className="action-button primary"
+            onClick={openFileExplorer}
+          >
+            File Explorer
           </button>
           <button className="action-button danger">Terminate</button>
         </div>
@@ -312,6 +330,10 @@ const AgentCommander = ({ agent: initialAgent }) => {
             />
           </div>
         </div>
+      )}
+
+      {showFileExplorer && agent && (
+        <FileExplorer agent={agent} onClose={closeFileExplorer} />
       )}
     </div>
   );
