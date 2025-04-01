@@ -1,0 +1,239 @@
+/* Modal styles for interactive shell */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.interactive-shell-modal {
+  width: 90%;
+  max-width: 1000px;
+  height: 80vh;
+  background-color: var(--background-primary);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: modalAppear 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.interactive-shell-window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+.shell-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: var(--bg-darker);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.agent-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.hostname {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.separator {
+  color: var(--text-secondary);
+}
+
+.status {
+  color: var(--text-secondary);
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 24px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.close-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.active {
+  background-color: var(--success-color);
+  box-shadow: 0 0 0 2px rgba(var(--success-color-rgb), 0.2);
+}
+
+.interactive-terminal-container {
+  flex: 1;
+  background-color: #1e1e1e;
+  padding: 4px;
+  overflow: hidden;
+}
+
+.shell-footer {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  background-color: var(--bg-darker);
+  border-top: 1px solid var(--border-color);
+}
+
+.shell-instructions {
+  display: flex;
+  gap: 16px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.shell-instructions code {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+.shell-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.shell-error {
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  color: var(--error-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.shell-error h3 {
+  font-size: 18px;
+  color: var(--error-color);
+  margin: 0;
+}
+
+.shell-error p {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.shell-error button {
+  padding: 8px 16px;
+  background-color: var(--bg-button);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.shell-error button:hover {
+  background-color: var(--bg-hover);
+}
+
+/* Customize scrollbar for the terminal */
+.interactive-terminal-container::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.interactive-terminal-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.interactive-terminal-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.interactive-terminal-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Style the terminal to fill the container */
+.interactive-terminal-container .xterm {
+  height: 100%;
+  width: 100%;
+}
+
+/* Apply dark styles to the body for the popup window */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+.interactive-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-dark);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.interactive-shell.is-modal {
+  width: 800px;
+  height: 600px;
+  max-width: 90vw;
+  max-height: 80vh;
+}

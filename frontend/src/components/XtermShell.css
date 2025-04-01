@@ -1,0 +1,55 @@
+.xterm-shell-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--background-secondary);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.xterm-container {
+  flex: 1;
+  padding: 4px;
+  background-color: var(--background-tertiary);
+}
+
+/* Customize scrollbar for the terminal */
+.xterm-container::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.xterm-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.xterm-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.xterm-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Make sure terminal can take full height */
+.xterm {
+  height: 100%;
+}
+
+.xterm-viewport {
+  overflow-y: auto !important;
+}
+
+/* Hide scrollbar when not in use */
+.xterm-viewport::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.xterm-viewport:not(:hover)::-webkit-scrollbar-thumb {
+  background: transparent;
+}

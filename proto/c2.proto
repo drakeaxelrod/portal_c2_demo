@@ -51,11 +51,13 @@ message HeartbeatRequest {
   string agent_id = 1;
   int64 timestamp = 2;
   SystemStats stats = 3;
+  string ip_address = 4;
 }
 
 message HeartbeatResponse {
   bool success = 1;
   int64 server_time = 2;
+  string message = 3;
 }
 
 message SystemStats {

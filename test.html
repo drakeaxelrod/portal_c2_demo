@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal C2 API Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c5282;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .panel {
+            flex: 1;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        pre {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow: auto;
+            max-height: 400px;
+        }
+        button {
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        button:hover {
+            background-color: #3182ce;
+        }
+        input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            width: 400px;
+            font-size: 14px;
+        }
+        .terminal {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow: auto;
+            height: 400px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .agent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .agent-item {
+            padding: 12px;
+            background-color: #ebf8ff;
+            border-radius: 6px;
+            border-left: 4px solid #4299e1;
+            cursor: pointer;
+        }
+        .agent-item:hover {
+            background-color: #bee3f8;
+        }
+        .agent-item.selected {
+            background-color: #bee3f8;
+            border-left-color: #2b6cb0;
+        }
+        .form-row {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Portal C2 API Test</h1>
+
+    <div class="container">
+        <div class="panel">
+            <h2>Agents</h2>
+            <button id="refreshAgents">Refresh Agents</button>
+            <div id="agentList" class="agent-list">
+                <div class="loading">Loading agents...</div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Command</h2>
+            <div id="commandSection">
+                <div class="form-row">
+                    <label>Selected Agent:</label>
+                    <span id="selectedAgent">None selected</span>
+                </div>
+                <div class="form-row">
+                    <label>Command:</label>
+                    <input type="text" id="commandInput" placeholder="Enter command...">
+                    <button id="sendCommand" disabled>Send Command</button>
+                </div>
+                <h3>Response</h3>
+                <pre id="commandResponse">No response yet</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="margin-top: 20px;">
+        <div class="panel">
+            <h2>Interactive Shell</h2>
+            <div id="shellSection">
+                <div class="form-row">
+                    <button id="startShell" disabled>Start Interactive Shell</button>
+                    <button id="stopShell" disabled>Stop Shell</button>
+                </div>
+                <div id="terminal" class="terminal">Select an agent and click "Start Interactive Shell"</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080';
+        let selectedAgentId = null;
+        let websocket = null;
+
+        // Get DOM elements
+        const agentListElement = document.getElementById('agentList');
+        const refreshButton = document.getElementById('refreshAgents');
+        const selectedAgentElement = document.getElementById('selectedAgent');
+        const commandInput = document.getElementById('commandInput');
+        const sendCommandButton = document.getElementById('sendCommand');
+        const commandResponseElement = document.getElementById('commandResponse');
+        const startShellButton = document.getElementById('startShell');
+        const stopShellButton = document.getElementById('stopShell');
+        const terminalElement = document.getElementById('terminal');
+
+        // Load agents
+        async function loadAgents() {
+            try {
+                agentListElement.innerHTML = '<div class="loading">Loading agents...</div>';
+
+                const response = await fetch(`${API_URL}/api/agents`);
+                if (!response.ok) {
+                    throw new Error(`Failed to load agents: ${response.status}`);
+                }
+
+                const agents = await response.json();
+                console.log('Loaded agents:', agents);
+
+                if (agents.length === 0) {
+                    agentListElement.innerHTML = '<div>No agents found</div>';
+                    return;
+                }
+
+                agentListElement.innerHTML = '';
+                agents.forEach(agent => {
+                    const agentId = agent.agent_id || agent.id;
+                    const agentElement = document.createElement('div');
+                    agentElement.className = 'agent-item';
+                    if (agentId === selectedAgentId) {
+                        agentElement.classList.add('selected');
+                    }
+
+                    agentElement.innerHTML = `
+                        <div><strong>${agent.hostname || 'Unknown'}</strong> (${agentId})</div>
+                        <div>${agent.os || 'Unknown OS'} (${agent.architecture || agent.arch || 'Unknown'})</div>
+                        <div>IP: ${agent.ip_address || 'Unknown'}</div>
+                    `;
+
+                    agentElement.addEventListener('click', () => {
+                        selectedAgentId = agentId;
+
+                        // Update UI
+                        document.querySelectorAll('.agent-item').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        agentElement.classList.add('selected');
+
+                        selectedAgentElement.textContent = `${agent.hostname || 'Unknown'} (${agentId})`;
+                        sendCommandButton.disabled = false;
+                        startShellButton.disabled = false;
+                    });
+
+                    agentListElement.appendChild(agentElement);
+                });
+
+            } catch (error) {
+                console.error('Error loading agents:', error);
+                agentListElement.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Send command
+        async function sendCommand() {
+            const command = commandInput.value.trim();
+            if (!command || !selectedAgentId) return;
+
+            try {
+                sendCommandButton.disabled = true;
+                commandResponseElement.textContent = 'Executing command...';
+
+                const response = await fetch(`${API_URL}/api/agents/${selectedAgentId}/command`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        command,
+                        type: 'shell',
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Command failed: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Command result:', result);
+
+                if (result.success) {
+                    commandResponseElement.textContent = result.result || 'No output';
+                } else {
+                    commandResponseElement.textContent = `Error: ${result.error || 'Command failed'}`;
+                }
+
+            } catch (error) {
+                console.error('Error sending command:', error);
+                commandResponseElement.textContent = `Error: ${error.message}`;
+            } finally {
+                sendCommandButton.disabled = false;
+            }
+        }
+
+        // Start interactive shell
+        function startShell() {
+            if (!selectedAgentId) return;
+
+            // Close existing connection if any
+            if (websocket) {
+                websocket.close();
+            }
+
+            // Clear terminal
+            terminalElement.textContent = 'Connecting to shell...\n';
+
+            // Connect to WebSocket
+            websocket = new WebSocket(`ws://localhost:8080/api/agents/${selectedAgentId}/shell`);
+
+            websocket.onopen = () => {
+                terminalElement.textContent += 'WebSocket connection established\n';
+                startShellButton.disabled = true;
+                stopShellButton.disabled = false;
+
+                // Set up input handling
+                terminalElement.addEventListener('keydown', handleTerminalInput);
+                terminalElement.contentEditable = true;
+                terminalElement.focus();
+            };
+
+            websocket.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+
+                    if (data.output) {
+                        terminalElement.textContent += data.output;
+                    }
+
+                    if (data.error) {
+                        terminalElement.textContent += `\nError: ${data.error}\n`;
+                    }
+
+                    // Scroll to bottom
+                    terminalElement.scrollTop = terminalElement.scrollHeight;
+
+                } catch (e) {
+                    // If not JSON, just display raw data
+                    terminalElement.textContent += event.data;
+                    terminalElement.scrollTop = terminalElement.scrollHeight;
+                }
+            };
+
+            websocket.onclose = () => {
+                terminalElement.textContent += '\nConnection closed\n';
+                startShellButton.disabled = false;
+                stopShellButton.disabled = true;
+                terminalElement.contentEditable = false;
+                terminalElement.removeEventListener('keydown', handleTerminalInput);
+            };
+
+            websocket.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                terminalElement.textContent += `\nWebSocket error\n`;
+                startShellButton.disabled = false;
+                stopShellButton.disabled = true;
+            };
+        }
+
+        // Handle terminal input
+        function handleTerminalInput(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+
+                const text = terminalElement.textContent;
+                const lines = text.split('\n');
+                const lastLine = lines[lines.length - 1];
+
+                // Send input to WebSocket
+                if (websocket && websocket.readyState === WebSocket.OPEN) {
+                    websocket.send(JSON.stringify({
+                        input: lastLine + '\n'
+                    }));
+                }
+            }
+        }
+
+        // Stop shell
+        function stopShell() {
+            if (websocket) {
+                websocket.close();
+                websocket = null;
+            }
+
+            startShellButton.disabled = false;
+            stopShellButton.disabled = true;
+            terminalElement.contentEditable = false;
+            terminalElement.removeEventListener('keydown', handleTerminalInput);
+        }
+
+        // Event listeners
+        refreshButton.addEventListener('click', loadAgents);
+        sendCommandButton.addEventListener('click', sendCommand);
+        startShellButton.addEventListener('click', startShell);
+        stopShellButton.addEventListener('click', stopShell);
+
+        // Load agents on page load
+        loadAgents();
+    </script>
+</body>
+</html>

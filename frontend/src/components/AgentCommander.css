@@ -1,0 +1,326 @@
+.agent-commander {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.commander-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background-color: var(--background-secondary);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.agent-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.back-button {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.back-button:hover {
+  background-color: var(--background-hover);
+}
+
+.agent-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--background-tertiary);
+  padding: 8px 15px;
+  border-radius: 4px;
+  border-left: 3px solid var(--primary-color);
+}
+
+.os-icon {
+  font-size: 18px;
+}
+
+.agent-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.agent-detail, .agent-ip {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.commander-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-tertiary);
+  color: var(--text-primary);
+}
+
+.action-button:hover {
+  background-color: var(--background-hover);
+}
+
+.action-button.primary {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.action-button.primary:hover {
+  background-color: var(--primary-color-hover);
+}
+
+.action-button.danger {
+  background-color: var(--error-color);
+  color: white;
+  border-color: var(--error-color);
+}
+
+.action-button.danger:hover {
+  background-color: rgba(var(--error-color-rgb), 0.8);
+}
+
+.command-terminal {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 20px 30px;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.terminal-header {
+  background-color: var(--background-accent);
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.terminal-output {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  background-color: var(--background-tertiary);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+}
+
+.welcome-message {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: rgba(var(--primary-color-rgb), 0.1);
+  border-radius: 4px;
+  border-left: 3px solid var(--primary-color);
+}
+
+.welcome-message h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.welcome-message p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.welcome-message p:last-child {
+  margin-bottom: 0;
+}
+
+.terminal-entry {
+  margin-bottom: 15px;
+}
+
+.command-entry {
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.prompt {
+  color: var(--primary-color);
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.command-text {
+  font-weight: 500;
+}
+
+.response-entry pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text-secondary);
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 10px;
+  border-radius: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.error-entry pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--error-color);
+  background-color: rgba(var(--error-color-rgb), 0.1);
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.command-input-form {
+  display: flex;
+  align-items: center;
+  background-color: var(--background-accent);
+  padding: 10px 15px;
+  border-top: 1px solid var(--border-color);
+}
+
+.command-input-form input {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  padding: 5px;
+  margin: 0 10px;
+}
+
+.command-input-form input:focus {
+  outline: none;
+}
+
+.command-input-form button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.command-input-form button:hover:not(:disabled) {
+  background-color: var(--primary-color-hover);
+}
+
+.command-input-form button:disabled {
+  background-color: var(--disabled-color);
+  cursor: not-allowed;
+}
+
+.quick-commands {
+  margin: 0 30px 20px;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quick-commands-header {
+  background-color: var(--background-accent);
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.quick-commands-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 15px;
+}
+
+.quick-command-button {
+  background-color: var(--background-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.quick-command-button:hover:not(:disabled) {
+  background-color: var(--background-hover);
+  border-color: var(--primary-color);
+}
+
+.quick-command-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .commander-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px 20px;
+  }
+
+  .agent-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .commander-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .command-terminal,
+  .quick-commands {
+    margin: 15px 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .agent-badge {
+    flex-wrap: wrap;
+  }
+
+  .quick-commands-list {
+    flex-direction: column;
+  }
+}
